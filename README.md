@@ -42,7 +42,7 @@ Use Docker to install [FerretDB](https://github.com/ferretdb/FerretDB/pkgs/conta
 $ docker pull ghcr.io/ferretdb/ferretdb:1.6.0
 ```
 
-Start the FerretDB service the background.
+Start the FerretDB service in the background.
 
 ```shell
 $ docker compose up -d.

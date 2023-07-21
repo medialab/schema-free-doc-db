@@ -37,6 +37,7 @@ def import_data(ctx, datafile):
     for data in yield_data(datafile=datafile):
         # ---------- #
         # Do things to the CSV dict row...
+        data.update({"words": data["post"].split()})
         # ---------- #
 
         # Dump the data in the collection

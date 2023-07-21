@@ -4,6 +4,28 @@ Schema-free document database using open-source [FerretDB](https://github.com/Fe
 
 FerretDB is pitched as the "de-facto open-source substitute to MongoDB." Unfortunately, FerretDB does not (yet) support nested JSON arrays, which are one of the best parts of a MongoDB document database. However, another great aspect of MongoDB databases is the ease of dumping documents with different schemas into a collection. Plus, FerretDB's service supports requests sent in a Python script using the `pymongo` library.
 
+Here's an example of how data from a CSV file can be parsed, manipulated, and inserted into the document database.
+
+Input
+|id|user_name|post|post_time|
+|--|--|--|--|
+|1|FionaA|"Hello world!"|2023-07-21 08:14:44.826259|
+
+Output
+
+```json
+{
+  "_id": {
+    "$oid": "64ba4cc917022a377d337a25"
+  },
+  "id": "1",
+  "user_name": "FionaA",
+  "post": "Hello world!",
+  "post_time": "2023-07-21 08:14:44.826259",
+  "words": ["Hello", "world!"]
+}
+```
+
 Contents
 
 - [Set up](#set-up)
@@ -67,15 +89,15 @@ $ python src/main.py --database-name <DATABASE> --collection-name <COLLECTION> i
 Between parsing a CSV row into a dictionary and inserting it into the document database, you can manipulate the data, adding fields and enrichments. There are no limitations on how many new key-value pairs can be added to a row because MongoDB is flexible and does not require a rigid schema. However, due to FerretDB's limitations, no key's value can be a nested JSON array.
 
 ```python
-# Stream the CSV file
+    # Stream the CSV file
     for data in yield_data(datafile=datafile):
         # ---------- #
         # Do things to the CSV dict row...
+        data.update({"words": data["post"].split()})
         # ---------- #
 
         # Dump the data in the collection
         collection.insert_one(document=data)
-
 ```
 
 Export the collection to a JSON file.
